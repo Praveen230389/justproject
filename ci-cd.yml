@@ -1,23 +1,41 @@
-name: CI/CD for LUGX Gaming
+---
+- name: CI/CD pipeline inside single EC2 (Jenkins, Docker, Terraform, Ansible all-in-one)
+  hosts: localhost
+  become: true
+  connection: local
 
-on:
-  push:
-    branches:
-      - main
+  tasks:
+    - name: Build Docker image for LUGX site
+      docker_image:
+        name: lugx-site
+        path: .
+        state: present
 
-jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
+    - name: Run Docker container from built image
+      docker_container:
+        name: lugx-container
+        image: lugx-site
+        state: started
+        ports:
+          - "80:80"
+        restart_policy: always
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
+    - name: Initialize Terraform
+      command: terraform init
+      args:
+        chdir: ./terraform
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+    - name: Validate Terraform files
+      command: terraform validate
+      args:
+        chdir: ./terraform
 
-      - name: Build Docker image
-        run: docker build -t lugx-site .
+    - name: Plan Terraform deployment
+      command: terraform plan -out=tfplan
+      args:
+        chdir: ./terraform
 
-      - name: Run Container
-        run: docker run -d -p 80:80 lugx-site
+    - name: Apply Terraform plan
+      command: terraform apply -auto-approve tfplan
+      args:
+        chdir: ./terraform
