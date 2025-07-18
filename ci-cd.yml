@@ -17,7 +17,7 @@
         image: lugx-site
         state: started
         ports:
-          - "82:80"
+          - "8082:80"
         restart_policy: always
 
     - name: Initialize Terraform
