@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone Code') {
             steps {
-                git 'https://github.com/your-username/lugx-gaming.git'
+                git 'https://github.com/Praveen230389/justproject.git'
             }
         }
 
