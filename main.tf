@@ -1,21 +1,17 @@
 provider "aws" {
-  region     = var.region
-  access_key = var.access_key
-  secret_key = var.secret_key
+  region = "us-east-1"  # change if you're using a different region
 }
 
-# You can add other resources here like S3, IAM, etc., if needed
+resource "aws_s3_bucket" "my_project_bucket" {
+  bucket = "my-project-bucket-${random_id.bucket_suffix.hex}"
+  acl    = "private"
 
-# Output block (optional, keep if you're referencing any EC2 IP or similar resource later)
-# Uncomment this block only if you're still referencing EC2 somewhere
-# output "instance_ip" {
-#   value = aws_instance.lugx_ec2.public_ip
-# }
-
-# Variables
-variable "region" {
-  default = "us-east-1"
+  tags = {
+    Name        = "MyProjectBucket"
+    Environment = "Dev"
+  }
 }
 
-variable "access_key" {}
-variable "secret_key" {}
+resource "random_id" "bucket_suffix" {
+  byte_length = 4
+}
