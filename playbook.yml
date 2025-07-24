@@ -1,13 +1,7 @@
-name: Do Nothing Workflow
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  noop:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+---
+- name: Test Jenkins-Ansible Connection
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Ping all servers
+      ansible.builtin.ping:
