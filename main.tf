@@ -1,17 +1,20 @@
 provider "aws" {
-  region = "us-east-1"  # change if you're using a different region
+  region = "us-east-1"
 }
 
-resource "aws_s3_bucket" "my_project_bucket" {
-  bucket = "my-project-bucket-${random_id.bucket_suffix.hex}"
-  acl    = "private"
+resource "aws_s3_bucket" "website_bucket" {
+  bucket = "my-generic-website-bucket-${random_id.bucket_id.hex}"
+
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
 
   tags = {
-    Name        = "MyProjectBucket"
-    Environment = "Dev"
+    Name = "Website Bucket"
   }
 }
 
-resource "random_id" "bucket_suffix" {
+resource "random_id" "bucket_id" {
   byte_length = 4
 }
