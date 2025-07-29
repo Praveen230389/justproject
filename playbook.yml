@@ -1,6 +1,6 @@
 ---
 - name: Test Jenkins-Ansible Connection
-  hosts: all
+  hosts: localhost
   gather_facts: no
   tasks:
     - name: Ping all servers
